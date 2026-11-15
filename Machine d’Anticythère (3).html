@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Machine d’Anticythère</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;800&family=Hanken+Grotesk:wght@400;600&family=IM+Fell+English&display=swap">
+<style>
+:root{--ink:#0b1030;--panel:#141b3d;--line:#2a3566;--bronze:#c89b57;--bronze2:#7a5a2b;--ice:#e6edff;--mute:#9aa6cf;--coral:#ff6b57;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--ink)}
+body{margin:0;min-height:100%;color:var(--ice);font:400 16px/1.55 "Hanken Grotesk",system-ui,sans-serif;background:radial-gradient(ellipse at 30% 35%,#1b2552 0,var(--ink) 62%)}
+header,main,footer{max-width:1200px;margin:0 auto;padding:0 20px}
+header{padding-top:28px}
+h1{font:800 clamp(2rem,5vw,3.6rem)/1.05 Oxanium,sans-serif;margin:0 0 8px;letter-spacing:.01em;color:var(--bronze)}
+header p{margin:0;max-width:62ch;color:var(--mute)}
+main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px;margin-top:22px;align-items:start}
+@media(max-width:860px){main{grid-template-columns:1fr}}
+#face{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 40px #000a)}
+aside{display:flex;flex-direction:column;gap:18px}
+h2{font:600 1.05rem Oxanium,sans-serif;margin:0 0 6px;color:var(--bronze)}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px}
+input,select,button{font:inherit;color:var(--ice);background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
+button{cursor:pointer;background:var(--bronze);color:#1a1205;font-weight:600;border-color:var(--bronze)}
+button.alt{background:transparent;color:var(--ice);border-color:var(--bronze)}
+:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr auto;gap:5px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;font-variant-numeric:tabular-nums}
+dl dt{font-weight:600}dl dd{margin:0;color:var(--mute)}dl .g{font-size:1.2rem;width:1.4em;text-align:center}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.box svg{width:100%;height:auto;display:block}
+.moon{grid-column:1/-1;color:var(--ice)}
+.clock{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px;max-width:1200px;margin:40px auto 0;padding:0 20px;align-items:center}
+@media(max-width:860px){.clock{grid-template-columns:1fr}}
+.clock svg{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 40px #000a)}
+.clock p{color:var(--mute);margin:0 0 12px}
+#ck{grid-template-columns:auto 1fr}
+footer{padding:22px 20px 34px;color:var(--mute);font-size:.88rem}
+.zg{font:600 24px "Segoe UI Symbol","Noto Sans Symbols",sans-serif;fill:var(--bronze)}
+.mo{font:600 10.5px Oxanium,sans-serif;fill:var(--ice)}
+.zg{fill:#c89b57}.mo{fill:#e6edff}
+.bar{width:min(1160px,calc(100% - 40px));margin:18px auto 0}.sm{font-size:.85rem;margin:0 0 8px;color:var(--mute)}
+#sky,#gsv,#ast{max-width:520px;margin:auto}#ast{touch-action:none;cursor:grab}
+#elist{list-style:none;margin:0;padding:0;max-height:430px;overflow:auto}#elist li{margin:0 0 4px}#elist button{width:100%;text-align:left;background:var(--panel);color:var(--ice);border:1px solid var(--line);font-weight:400}
+.tip{border-bottom:1px dotted var(--bronze);cursor:help;position:relative}
+.tip:hover::after,.tip:focus::after{content:attr(data-tip);position:absolute;left:0;top:100%;z-index:9;width:max-content;max-width:250px;background:var(--ink);color:var(--ice);border:1px solid var(--bronze);padding:6px 9px;border-radius:6px;font-size:.82rem;font-weight:400;white-space:normal}
+[data-m=p]{--ink:#e8dbb8;--panel:#f2e6c8;--line:#b8995e;--bronze:#6e4515;--ice:#2c1f10;--mute:#6a5433;color-scheme:light}
+[data-m=p] body{font-family:'IM Fell English',Georgia,serif;background:radial-gradient(ellipse at 30% 35%,#f4e9cd 0,#d9c595 70%)}
+[data-m=p] h1,[data-m=p] h2{font-family:'IM Fell English',Georgia,serif}
+[data-m=p] svg,[data-m=p] svg#face{filter:invert(.9) hue-rotate(180deg) sepia(.55) contrast(.92) drop-shadow(0 8px 18px #5a3d1a55)}
+</style>
+</head>
+<body>
+<header>
+<h1 id="h1">Machine d’Anticythère</h1>
+<p id="intro">Le calculateur astronomique grec du IIᵉ siècle av. J.-C., reconstruit pour aujourd’hui : choisissez une date et regardez le Soleil, la Lune et les planètes, de Mercure à Pluton, prendre leur place.</p>
+</header>
+<div class="ctl bar">
+<label><span data-i="lang">Langue</span><select id="lang"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option></select></label>
+<label><span data-i="mode">Style</span><select id="mode"><option value="n" data-i="mn">Numérique</option><option value="p" data-i="mp">Parchemin</option></select></label>
+<label><span data-i="place">Lieu</span><select id="place"></select></label>
+<label>Lat<input id="lat" type="number" step="0.1" min="-90" max="90" style="width:84px"></label>
+<label>Lon<input id="lon" type="number" step="0.1" min="-180" max="180" style="width:90px"></label>
+<label><span data-i="conf">Configurations</span><select id="conf"></select></label>
+<button id="sv" class="alt" data-i="save">Enregistrer</button>
+</div>
+<main>
+<section aria-label="Face avant">
+<svg id="face" viewBox="0 0 600 600" role="img" aria-label="Face avant : zodiaque, calendrier, Soleil, Lune et planètes"></svg>
+</section>
+<aside>
+<div class="ctl">
+<label><span data-i="date">Date</span><input type="date" id="date"></label>
+<label><span data-i="speed">Vitesse</span><select id="spd"><option value="0.0000115741">Temps réel</option><option value="0.000694444">1 minute par seconde</option><option value="0.0416667">1 heure par seconde</option><option value="1" selected>1 jour par seconde</option><option value="7">1 semaine par seconde</option><option value="30.44">1 mois par seconde</option><option value="365.25">1 an par seconde</option></select></label>
+<label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="st" checked><span data-i="stars">Étoiles</span></label><button id="play">Pause</button>
+<button id="now" class="alt">Aujourd’hui</button>
+</div>
+<dl id="pos"></dl>
+<div class="box"><h2 data-i="hg2">Train d’engrenages</h2><p class="sm" id="gtt"></p><svg id="gears" viewBox="0 0 490 130" role="img" aria-label="Six engrenages en prise"></svg></div>
+<div class="box"><h2 data-i="hd">Cadrans arrière</h2><p class="sm" id="dtx"></p><svg id="dials" viewBox="0 0 480 205" role="img" aria-label="Cadrans de Méton et du Saros"></svg></div>
+</aside>
+</main>
+<section class="clock" aria-label="Horloge astronomique">
+<svg id="clk" viewBox="0 0 600 600" role="img" aria-label="Horloge astronomique : heures, zodiaque, Soleil et Lune"></svg>
+<div><h2 data-i="hc">Horloge astronomique</h2><p id="ctx">Comme dans les cathédrales de Strasbourg, Beauvais ou Lyon : le Soleil donne l’heure sur l’anneau des heures (midi en haut), le zodiaque tourne derrière lui et la Lune montre sa phase au centre. L’arc doré marque le jour, de l’aube au crépuscule. Calculée pour Amiens (49,9° N, 2,3° E).</p><dl id="ck"></dl></div>
+</section>
+<section class="clock" aria-label="Voûte céleste"><svg id="sky" viewBox="0 0 300 300" role="img" aria-label="Voûte céleste"></svg><div><h2 data-i="hv">Voûte céleste</h2><p id="vtx"></p><p id="vl" style="color:var(--ice)"></p></div></section>
+<section class="clock" aria-label="Astrolabe"><svg id="ast" viewBox="0 0 360 360" role="img" aria-label="Astrolabe"></svg><div><h2 data-i="ha">Astrolabe</h2><p id="atx"></p><p id="rdo" style="color:var(--ice)"></p></div></section>
+<section class="clock" aria-label="Éclipses"><div><h2 data-i="he">Éclipses et alignements</h2><p id="etx"></p><div class="ctl"><label><span data-i="et">Type</span><select id="etype"><option value="s" data-i="es1">Éclipses solaires</option><option value="l" data-i="es2">Éclipses lunaires</option><option value="3" data-i="e3">3 planètes</option><option value="4" data-i="e4">4 planètes</option><option value="5" data-i="e5">5 planètes</option></select></label><label><span data-i="ey">Depuis l’année</span><input id="eyear" type="number" value="1900" style="width:92px"></label><label><span data-i="ed">Durée (ans)</span><select id="espan"><option>25</option><option selected>50</option><option>100</option><option value="0">→ 3000</option></select></label><button id="eg" data-i="eg">Chercher</button><button id="e3k" class="alt" data-i="e3k">À venir (→ 3000)</button></div></div><ul id="elist"></ul></section>
+<section class="clock" aria-label="Carte"><svg id="map" viewBox="0 0 720 360" role="img" aria-label="Carte du monde"></svg><div><h2 data-i="hm">Carte du chemin</h2><p id="mtx"></p></div></section>
+<section class="clock" aria-label="Engrenages pas à pas"><div><h2 data-i="hg">Engrenages pas à pas</h2><p id="gtx"></p><div class="ctl"><button id="gp" class="alt" aria-label="Précédent">←</button><button id="gn" aria-label="Suivant">→</button><span id="gst"></span></div></div><svg id="gsv" viewBox="0 0 420 220" role="img" aria-label="Deux engrenages en prise"></svg></section>
+<footer id="ft">Positions approchées (orbites circulaires moyennes) : quelques degrés d’écart possibles pour les planètes. Les cadrans arrière comptent depuis le 1ᵉʳ janvier 2000. Les étoiles sont tracées en coordonnées écliptiques : l’angle donne leur longitude, la distance au centre leur latitude.</footer>
+<script>
+const $=s=>document.querySelector(s),rad=Math.PI/180,mod=(a,n)=>((a%n)+n)%n;
+const SG=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'].map(x=>x+'\uFE0E');
+const NOMS=['Bélier','Taureau','Gémeaux','Cancer','Lion','Vierge','Balance','Scorpion','Sagittaire','Capricorne','Verseau','Poissons'];
+const MOIS=['Janv','Févr','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+const pol=(r,l)=>{const t=-l*rad;return[300+r*Math.sin(t),300-r*Math.cos(t)]};
+const R=(a)=>`rotate(${a} 300 300)`;
+/* ---------- face avant ---------- */
+let s=`<defs><linearGradient id="bz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0cf8f"/><stop offset=".5" stop-color="#c89b57"/><stop offset="1" stop-color="#6e4f25"/></linearGradient></defs>
+<circle cx="300" cy="300" r="298" fill="url(#bz)"/><circle cx="300" cy="300" r="289" fill="#10173a"/>
+<circle cx="300" cy="300" r="265" fill="none" stroke="#1b2552" stroke-width="40"/>
+<circle cx="300" cy="300" r="285" fill="none" stroke="#c89b57" stroke-width="1.5"/><circle cx="300" cy="300" r="245" fill="none" stroke="#c89b57" stroke-width="1.5"/>`;
+let tk='';
+for(let i=0;i<72;i++){const[a,b]=pol(285,i*5),[c,d]=pol(i%6?281:276,i*5);tk+=`M${a} ${b}L${c} ${d}`}
+s+=`<path d="${tk}" stroke="#c89b57" stroke-width="1" fill="none"/>`;
+for(let i=0;i<12;i++){
+ s+=`<line x1="300" y1="15" x2="300" y2="55" stroke="#c89b57" stroke-width="1.5" transform="${R(-30*i)}"/>`;
+ s+=`<text x="300" y="44" text-anchor="middle" class="zg" transform="${R(-(30*i+15))}">${SG[i]}</text>`;
+}
+/* anneau calendrier (mobile) */
+const cum=[0,31,59.25,90.25,120.25,151.25,181.25,212.25,243.25,273.25,304.25,334.25,365.25];
+let cal=`<circle cx="300" cy="300" r="228.5" fill="none" stroke="#0e1535" stroke-width="33"/><circle cx="300" cy="300" r="212" fill="none" stroke="#c89b57" stroke-width="1.2"/>`;
+let dt='';
+for(let i=0;i<365;i++){const th=i/365.25*360,[a,b]=pol(245,th),[c,d]=pol(i%5?241:237,th);dt+=`M${a} ${b}L${c} ${d}`}
+cal+=`<path d="${dt}" stroke="#9aa6cf" stroke-width=".7" fill="none"/>`;
+for(let i=0;i<12;i++){
+ const a=cum[i]/365.25*360,m=(cum[i]+cum[i+1])/2/365.25*360;
+ cal+=`<line x1="300" y1="55" x2="300" y2="90" stroke="#c89b57" stroke-width="1.3" transform="${R(-a)}"/>`;
+ cal+=`<text x="300" y="76" text-anchor="middle" class="mo" transform="${R(-m)}">${MOIS[i]}</text>`;
+}
+s+=`<g id="cal">${cal}</g><circle cx="300" cy="300" r="205" fill="#0a0f2b" stroke="#c89b57" stroke-width="1.5"/>`;
+const PL=[['mer','☿',58,'#d8d8e6'],['ven','♀',78,'#f2d27a'],['mar','♂',98,'#ff6b57'],['jup','♃',116,'#e8a36b'],['sat','♄',132,'#cdb88b'],['ura','♅',148,'#7fe0e6'],['nep','♆',164,'#6f8cff'],['plu','♇',180,'#c9a0ff']];
+const ST=[['Sirius',104.1,-39.6,2.6],['Canopus',105,-75.8,2.4],['Arcturus',204.2,30.7,2.4],['Véga',285.3,61.7,2.3],['Capella',81.9,22.9,2.2],['Rigel',76.8,-31.1,2.2],['Procyon',115.8,-16,2],['Bételgeuse',88.8,-16,2.2],['Altaïr',301.8,29.3,2],['Aldébaran',69.8,-5.5,2.2],['Antarès',249.8,-4.6,2.3],['Spica',203.8,-2.1,2.2],['Pollux',113.2,6.7,2],['Fomalhaut',333.9,-21.1,2],['Deneb',335.6,59.9,2],['Régulus',150,.5,2.1],['Castor',110.2,10.1,1.8],['Polaire',88.2,66.1,1.8],['Pléiades',60,4,2],['Achernar',345.4,-59.4,2]];
+const sp=(l,b)=>pol(28+(b+90)/180*170,l);
+let sg='',sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+for(let i=0;i<110;i++){const[x,y]=sp(rnd()*360,Math.asin(rnd()*2-1)/rad);sg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.4+rnd()*.7).toFixed(1)}" fill="#e6edff" opacity=".35"/>`}
+for(const[n,l,b,z]of ST){const[x,y]=sp(l,b);sg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${z}" fill="#fff3c9"/><text x="${(x+4).toFixed(1)}" y="${(y-3).toFixed(1)}" font-size="8.5" fill="#9aa6cf" font-family="Hanken Grotesk,sans-serif">${n}</text>`}
+s+=`<g id="stars">${sg}</g>`;
+for(const[,,r]of PL)s+=`<circle cx="300" cy="300" r="${r}" fill="none" stroke="#2a3566" stroke-width="1"/>`;
+s+=`<circle cx="300" cy="300" r="200" fill="none" stroke="#2a3566" stroke-dasharray="2 5"/>`;
+const body=(id,col,r,g,fs)=>`<line id="l-${id}" x1="300" y1="300" x2="300" y2="300" stroke="${col}" stroke-opacity=".4" stroke-width="1.5"/><g id="b-${id}"><circle r="${r}" fill="${col}"/><text y="${fs/3}" text-anchor="middle" font-size="${fs}" fill="#0b1030" font-family="Segoe UI Symbol,Noto Sans Symbols,sans-serif">${g}\uFE0E</text></g>`;
+for(const[id,g,,c]of PL)s+=body(id,c,8,g,11);
+s+=`<line id="l-sun" x1="300" y1="300" x2="300" y2="300" stroke="#ffd46b" stroke-width="2"/><g id="b-sun" style="filter:drop-shadow(0 0 8px #ffd46b)"><circle r="13" fill="#ffd46b"/><text y="6" text-anchor="middle" font-size="17" fill="#0b1030" font-family="Segoe UI Symbol,Noto Sans Symbols,sans-serif">☉\uFE0E</text></g>`;
+s+=`<line id="l-moon" x1="300" y1="300" x2="300" y2="300" stroke="#e6edff" stroke-opacity=".5" stroke-width="1.5"/><g id="b-moon"><circle r="16" fill="#1a2250" stroke="#e6edff" stroke-width="1"/><path id="lit" d="M-16 0A16 16 0 0 1 16 0Z" fill="#e6edff"/></g>`;
+s+=`<circle cx="300" cy="300" r="12" fill="url(#bz)"/><circle cx="300" cy="300" r="4" fill="#0b1030"/>`;
+$('#face').innerHTML=s;
+/* ---------- engrenages ---------- */
+const circ=(x,y,q)=>`M${x-q} ${y}a${q} ${q} 0 1 0 ${2*q} 0a${q} ${q} 0 1 0 ${-2*q} 0Z`;
+function gear(n,r){const h=r*.16,rr=r-h/2,rt=r+h/2,p=360/n;let d='';
+ for(let i=0;i<n;i++)[[rr,-.3],[rt,-.16],[rt,.16],[rr,.3]].forEach(([q,k],j)=>{const t=(i*p+k*p)*rad;d+=(i+j?'L':'M')+(q*Math.cos(t)).toFixed(1)+' '+(q*Math.sin(t)).toFixed(1)});
+ d+='Z'+circ(0,0,r*.1);
+ if(r>30)for(let k=0;k<5;k++){const t=k*72*rad;d+=circ(r*.55*Math.cos(t),r*.55*Math.sin(t),r*.17)}
+ return d}
+const N=[64,32,48,24,40,56];let gs='',x=6+N[0]*.9*1.08;
+N.forEach((n,i)=>{const r=n*.9;if(i)x+=N[i-1]*.9+r;
+ gs+=`<g transform="translate(${x.toFixed(1)} 65)"><path class="gr" data-i="${i}" d="${gear(n,r)}" fill="${i%2?'#9aa8c7':'#c89b57'}" fill-rule="evenodd" stroke="${i%2?'#4a5578':'#7a5a2b'}" stroke-width="1.2"/></g>`});
+$('#gears').innerHTML=gs;
+const GR=[...document.querySelectorAll('.gr')];
+/* ---------- cadrans arrière ---------- */
+let ds='';
+const dial=(cx,n,lab,big)=>{let t='';
+ for(let i=0;i<n;i++){const a=i/n*360*rad,L=i%big?5:10;t+=`M${cx+78*Math.sin(a)} ${95-78*Math.cos(a)}L${cx+(78-L)*Math.sin(a)} ${95-(78-L)*Math.cos(a)}`}
+ return `<circle cx="${cx}" cy="95" r="82" fill="#0a0f2b" stroke="#c89b57"/><path d="${t}" stroke="#9aa6cf" stroke-width=".8"/><g id="p${cx}"><line x1="${cx}" y1="95" x2="${cx}" y2="30" stroke="#ff6b57" stroke-width="2.5" stroke-linecap="round"/></g><circle cx="${cx}" cy="95" r="5" fill="#c89b57"/><text x="${cx}" y="198" text-anchor="middle" font-size="12" fill="#9aa6cf">${lab}</text>`};
+ds+=dial(125,19,'Cycle de Méton, 19 ans',1)+dial(355,223,'Cycle du Saros, 223 mois',10);
+$('#dials').innerHTML=ds;
+/* ---------- lignes de lecture ---------- */
+const ROWS=[['sun','☉','Soleil'],['moon','☽','Lune'],['mer','☿','Mercure'],['ven','♀','Vénus'],['mar','♂','Mars'],['jup','♃','Jupiter'],['sat','♄','Saturne'],['ura','♅','Uranus'],['nep','♆','Neptune'],['plu','♇','Pluton']];
+$('#pos').innerHTML=ROWS.map(([id,g,n])=>`<span class="g">${g}\uFE0E</span><dt>${n}</dt><dd id="t-${id}"></dd>`).join('')+`<dd class="moon" id="phase"></dd><dd class="moon" id="dl"></dd>`;
+/* ---------- astronomie ---------- */
+const EL={mer:[.387,252.25,4.09233],ven:[.723,181.98,1.60213],mar:[1.524,355.45,.52403],jup:[5.203,34.4,.08309],sat:[9.537,49.94,.03346],ura:[19.19,314.06,.011733],nep:[30.07,304.35,.005981],plu:[39.48,238.93,.003976]};
+const geo=(k,d)=>{const[a,L0,w]=EL[k],L=(L0+w*d)*rad,E=(100.46+.9856*d)*rad;return mod(Math.atan2(a*Math.sin(L)-Math.sin(E),a*Math.cos(L)-Math.cos(E))/rad,360)};
+const fmt=l=>`${Math.floor(l%30)}° ${NOMS[Math.floor(l/30)]}`;
+const PH=['Nouvelle lune','Premier croissant','Premier quartier','Gibbeuse croissante','Pleine lune','Gibbeuse décroissante','Dernier quartier','Dernier croissant'];
+const els={};for(const id of['sun','moon',...PL.map(p=>p[0])])els[id]={b:$('#b-'+id),l:$('#l-'+id),t:$('#t-'+id)};
+function put(id,r,l){const[x,y]=pol(r,l),e=els[id];e.b.setAttribute('transform',`translate(${x} ${y})`);e.l.setAttribute('x2',x);e.l.setAttribute('y2',y);e.t.textContent=fmt(l)}
+let t=Date.now(),play=!matchMedia('(prefers-reduced-motion: reduce)').matches,spd=1,last=performance.now(),shown='';
+function draw(){
+ const d=(t-Date.UTC(2000,0,1,12))/864e5,g=(357.528+.9856003*d)*rad;
+ const ls=mod(280.46+.9856474*d+1.915*Math.sin(g)+.02*Math.sin(2*g),360);
+ const lm=mod(218.316+13.176396*d+6.289*Math.sin((134.963+13.064993*d)*rad),360);
+ put('sun',232,ls);put('moon',200,lm);
+ for(const[id,,r]of PL)put(id,r,geo(id,d));
+ const ph=mod(lm-ls,360);$('#lit').setAttribute('transform',`rotate(${-ls})`);
+ $('#phase').textContent=`${PH[Math.round(ph/45)%8]}, éclairée à ${Math.round((1-Math.cos(ph*rad))/2*100)} %`;
+ const dd=new Date(t),y1_=new Date(t);y1_.setUTCMonth(0,1);y1_.setUTCHours(0,0,0,0);const doy=(t-y1_)/864e5/365.25*360;
+ $('#cal').setAttribute('transform',R(doy-ls));$('#stars').setAttribute('transform',R(-d*3.825e-5));
+ const crank=d*360/29.53;
+ GR.forEach((g2,i)=>g2.setAttribute('transform',`rotate(${(i%2?-1:1)*(i%2?-1:1)*0+((i%2?-1:1)*crank*N[0]/N[i]*(i%2?1:1))+(i%2?180/N[i]:0)})`));
+ clk(d,ls,lm,ph);sky(d,ls,lm);astro(d,ls,lm);const me=mod(d,6939.69)/6939.69,sa=mod(d,6585.32)/6585.32;
+ $('#p125').setAttribute('transform',`rotate(${me*360} 125 95)`);$('#p355').setAttribute('transform',`rotate(${sa*360} 355 95)`);
+ $('#dl').textContent=`Méton : année ${Math.floor(me*19)+1} sur 19. Saros : mois ${Math.floor(sa*223)+1} sur 223.`;
+ const v=new Date(t).toISOString().slice(0,10);if(v!==shown){$('#date').value=shown=v}
+}
+const CK=$('#clk'),RM=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'],SF="font-family='Segoe UI Symbol,Noto Sans Symbols,sans-serif'";
+let kc=`<circle cx='300' cy='300' r='298' fill='url(#bz)'/><circle cx='300' cy='300' r='289' fill='#10173a'/><circle cx='300' cy='300' r='265' fill='none' stroke='#1b2552' stroke-width='40'/><circle cx='300' cy='300' r='285' fill='none' stroke='#c89b57' stroke-width='1.5'/><circle cx='300' cy='300' r='245' fill='none' stroke='#c89b57' stroke-width='1.5'/><path id='day' fill='none' stroke='#ffd46b' stroke-width='4' stroke-linecap='round'/>`;
+for(let h=0;h<24;h++){const a=R((h-12)*15);kc+=`<line x1='300' y1='15' x2='300' y2='${h%6?23:30}' stroke='#c89b57' stroke-width='1.5' transform='${a}'/><text x='300' y='46' text-anchor='middle' class='mo' style='font-size:15px' transform='${a}'>${RM[(h+11)%12]}</text>`}
+let zz=`<circle cx='300' cy='300' r='195' fill='none' stroke='#1a2350' stroke-width='40'/><circle cx='300' cy='300' r='175' fill='none' stroke='#c89b57'/><circle cx='300' cy='300' r='215' fill='none' stroke='#c89b57'/>`;
+for(let i=0;i<12;i++)zz+=`<line x1='300' y1='85' x2='300' y2='125' stroke='#c89b57' transform='${R(-30*i)}'/><text x='300' y='112' text-anchor='middle' class='zg' style='font-size:20px' transform='${R(-(30*i+15))}'>${SG[i]}</text>`;
+kc+=`<g id='zr'>${zz}</g><circle cx='300' cy='300' r='170' fill='#0a0f2b' stroke='#c89b57' stroke-width='1.5'/><line id='hand' x1='300' y1='300' x2='300' y2='300' stroke='#ffd46b' stroke-width='2' stroke-opacity='.7'/>`;
+const CP=[['mer','☿',183,'#d8d8e6'],['ven','♀',207,'#f2d27a'],['mar','♂',183,'#ff6b57'],['jup','♃',207,'#e8a36b'],['sat','♄',195,'#cdb88b']];
+for(const[id,g,,col]of CP)kc+=`<g id='k-${id}'><circle r='7' fill='${col}'/><text y='4' text-anchor='middle' font-size='10' fill='#0b1030' ${SF}>${g}\uFE0E</text></g>`;
+kc+=`<g id='k-moon'><circle r='12' fill='#e6edff' stroke='#9aa6cf'/><text y='5' text-anchor='middle' font-size='14' fill='#0b1030' ${SF}>☽\uFE0E</text></g><g id='k-sun' style='filter:drop-shadow(0 0 8px #ffd46b)'><circle r='14' fill='#ffd46b'/><text y='6' text-anchor='middle' font-size='18' fill='#0b1030' ${SF}>☉\uFE0E</text></g><circle cx='300' cy='300' r='62' fill='#0a0f2b' stroke='url(#bz)' stroke-width='3'/><circle cx='300' cy='300' r='50' fill='#1a2250'/><path id='mlit' fill='#e6edff'/>`;
+CK.innerHTML=kc;
+const CRO=[['ck-date','Date'],['ck-leg','Heure légale (Paris)'],['ck-sol','Heure solaire vraie'],['ck-lev','Lever du Soleil'],['ck-cou','Coucher du Soleil'],['ck-age','Âge de la Lune'],['ck-sig','Soleil dans'],['ck-sep','']];
+$('#ck').innerHTML=CRO.map(([i,n])=>`<dt>${n}</dt><dd id='${i}'></dd>`).join('');
+const PF=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'numeric',minute:'numeric',hourCycle:'h23'});
+const hh=x=>{x=mod(x,24);let h=Math.floor(x),m=Math.round((x-h)*60);if(m==60){h=(h+1)%24;m=0}return h+'h'+String(m).padStart(2,'0')};
+function clk(d,ls,lm,ph){
+ const dt=new Date(t),uh=mod(t/36e5,24),N=Math.floor((t-new Date(new Date(t).setUTCMonth(0,0)).setUTCHours(0,0,0,0))/864e5),B=360/365*(N-81)*rad,
+ eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B),sol=mod(uh+LOC.lon/15+eot/60,24),as=(sol-12)*15;
+ const pp=LOC.tz?pf(LOC.tz).formatToParts(dt):null,ph2=pp?+pp.find(p=>p.type=='hour').value+ +pp.find(p=>p.type=='minute').value/60:mod(uh+Math.round(LOC.lon/15),24),off=mod(ph2-uh+12,24)-12;
+ $('#zr').setAttribute('transform',R(as+ls));
+ const at=(id,r,l)=>{const[x,y]=pol(r,(l-ls)-as);$('#k-'+id).setAttribute('transform',`translate(${x} ${y})`)};
+ at('sun',195,ls);at('moon',195,lm);CP.forEach(([id,,r])=>at(id,r,geo(id,d)));
+ const[hx,hy]=pol(195,-as);$('#hand').setAttribute('x2',hx);$('#hand').setAttribute('y2',hy);
+ const dec=Math.asin(Math.sin(23.44*rad)*Math.sin(ls*rad)),H=Math.acos(Math.max(-1,Math.min(1,-Math.tan(LOC.lat*rad)*Math.tan(dec))))/rad;
+ const Hc=Math.min(H,179.5),[x1,y1]=pol(249,Hc),[x2,y2]=pol(249,-Hc);
+ $('#day').setAttribute('d',`M${x1} ${y1}A249 249 0 ${H>90?1:0} 1 ${x2} ${y2}`);
+ const c2=Math.cos(ph*rad);
+ $('#mlit').setAttribute('d',`M0 -50A50 50 0 0 1 0 50A${(50*Math.abs(c2)).toFixed(1)} 50 0 0 ${c2>0?0:1} 0 -50Z`);
+ $('#mlit').setAttribute('transform',`translate(300 300) scale(${ph>180?-1:1} 1)`);
+ const set=(i,v)=>$('#'+i).textContent=v,lg=h=>hh(h-LOC.lon/15-eot/60+off);
+ set('ck-date',dt.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:LOC.tz||'UTC'}));
+ set('ck-leg',hh(ph2));set('ck-sol',hh(sol));set('ck-lev',lg(12-H/15));set('ck-cou',lg(12+H/15));
+ set('ck-age',(ph/360*29.53).toFixed(1).replace('.',',')+' jours');set('ck-sig',fmt(ls));set('ck-sep',Math.min(ph,360-ph).toFixed(1).replace('.',',')+'°');
+}
+/* ---------- langues ---------- */
+const L={fr:{h1:'Machine d’Anticythère',intro:'Le calculateur astronomique grec du IIᵉ siècle av. J.-C., reconstruit pour aujourd’hui : choisissez une date et un lieu, et regardez le ciel se mettre en place.',date:'Date',speed:'Vitesse',stars:'Étoiles',play:'Lecture',pause:'Pause',now:'Aujourd’hui',lang:'Langue',mode:'Style',mn:'Numérique',mp:'Parchemin',place:'Lieu',conf:'Configurations',save:'Enregistrer',custom:'Personnalisé',hc:'Horloge astronomique',hd:'Cadrans arrière',hg2:'Train d’engrenages',hv:'Voûte céleste',hg:'Engrenages pas à pas',st:'Étape',r:'Date|Heure légale|Heure solaire vraie|Lever du Soleil|Coucher du Soleil|Âge de la Lune|Soleil dans|Écart Soleil–Lune',ctx:'Le Soleil donne l’heure sur l’anneau (midi en haut), le {z} tourne derrière lui, la Lune montre sa phase au centre. L’arc doré marque le jour. L’{eot} écarte l’heure solaire de celle de l’horloge.',n_z:'zodiaque',t_z:'Bande de 12 constellations que le Soleil traverse en un an.',n_eot:'équation du temps',t_eot:'Écart, jusqu’à ±16 min, entre l’heure solaire vraie et l’heure moyenne.',n_met:'cycle de Méton',t_met:'19 années solaires ≈ 235 mois lunaires : les phases reviennent aux mêmes dates.',n_sar:'Saros',t_sar:'223 mois lunaires (≈ 18 ans) : les éclipses se répètent presque à l’identique.',n_tr:'train d’engrenages',t_tr:'Suite de roues dentées qui transmettent et démultiplient une rotation.',dtx:'Le {met} (19 ans) et le {sar} (223 mois) prédisent calendriers et éclipses.',gtt:'Un {tr} change la vitesse : sortie = entrée × dents d’entrée ÷ dents de sortie.',vtx:'Le ciel vu du lieu choisi : zénith au centre, horizon au bord, nord en haut, est à gauche. Le fond passe du jour à la nuit avec le Soleil.',ft:'Positions approchées (orbites circulaires moyennes) : quelques degrés d’écart possibles. Pour une éclipse, cherchez un écart Soleil–Lune minuscule.',g0:'La manivelle tourne la roue principale : un tour = un an. Le Soleil la suit.',g1:'Étage lunaire 1 : {a} dents entraînent {b} dents, vitesse × {r}.',g2:'Étage lunaire 2 : {a} → {b} dents, × {r}. Les rapports se multiplient.',g3:'Étage lunaire 3 : {a} → {b} dents, × {r}. Au total 254/19 ≈ 13,37 tours par an : la Lune.',g4:'{p} : {a} → {b} dents, soit {r} cycle synodique par an.',pn:'Mercure|Vénus|Mars|Jupiter|Saturne',vl:'Soleil : hauteur {a}°, azimut {z}°. Lune : hauteur {b}°.',cd:'N|E|S|O',ha:'Astrolabe',atx:'L’{ast} projette le ciel sur un plan. Le {ret} (écliptique, étoiles, Soleil, planètes) tourne sur le {tym}, gravé pour la latitude du lieu : horizon, cercles d’altitude, crépuscules en pointillés. La règle rouge lit l’heure sur le limbe.',n_ast:'astrolabe',t_ast:'Instrument antique qui représente la voûte céleste sur un disque et donne l’heure et la position des astres.',n_ret:'rété',t_ret:'Plaque ajourée tournante qui porte l’écliptique et les étoiles.',n_tym:'tympan',t_tym:'Disque fixe gravé pour une latitude : horizon, cercles d’altitude, méridien.',at2:'Glisse la règle bleue à la souris pour lire l’heure ; les lignes fines sont les azimuts.',he:'Éclipses et alignements',etx:'Éclipses calculées pour n’importe quelle période (années astronomiques, calendrier grégorien prolongé) et groupes de planètes serrées. Clique une ligne : la date et le meilleur lieu d’observation sont chargés. Positions approchées, moins fiables avant l’an 1500.',et:'Type',es1:'Éclipses solaires',es2:'Éclipses lunaires',e3:'3 planètes serrées (12°)',e4:'4 planètes serrées (30°)',e5:'5 planètes serrées (80°)',ey:'Depuis l’année',ed:'Durée (ans)',eg:'Chercher',tt:'Totale|Annulaire|Hybride|Partielle|Pénombrale',rd:'Règle : {h} (heure solaire)',no:'Aucun résultat',pl:'meilleur lieu :',nb:'{n} résultats',e3k:'À venir (→ 3000)',etx2:'Jusqu’à l’an 3000, les dates d’éclipses restent fiables, mais la longitude du lieu devient incertaine (la rotation de la Terre n’est pas connue d’avance) et les alignements s’écartent de quelques degrés après 2500.',hm:'Carte du chemin',mtx:'Clique une éclipse dans la liste : le trait rouge suit la ligne centrale de l’ombre de la Lune (totalité ou annularité) et le point doré marque le maximum. Pour une éclipse lunaire, le cercle en pointillés délimite la région où la Lune est visible. Les contours des continents sont schématiques.'},en:{h1:'Antikythera Mechanism',intro:'The Greek astronomical calculator of the 2nd century BC, rebuilt for today: pick a date and a place, and watch the sky settle into position.',date:'Date',speed:'Speed',stars:'Stars',play:'Play',pause:'Pause',now:'Today',lang:'Language',mode:'Style',mn:'Digital',mp:'Parchment',place:'Place',conf:'Saved setups',save:'Save',custom:'Custom',hc:'Astronomical clock',hd:'Rear dials',hg2:'Gear train',hv:'Celestial vault',hg:'Gears step by step',st:'Step',r:'Date|Civil time|True solar time|Sunrise|Sunset|Moon age|Sun in|Sun–Moon gap',ctx:'The Sun shows the hour on the ring (noon at top), the {z} turns behind it, the Moon shows its phase at the centre. The golden arc marks daylight. The {eot} shifts solar time away from clock time.',n_z:'zodiac',t_z:'Band of 12 constellations the Sun crosses in a year.',n_eot:'equation of time',t_eot:'Gap of up to ±16 min between true solar time and mean time.',n_met:'Metonic cycle',t_met:'19 solar years ≈ 235 lunar months: phases return on the same dates.',n_sar:'Saros',t_sar:'223 lunar months (≈ 18 years): eclipses repeat almost identically.',n_tr:'gear train',t_tr:'A series of toothed wheels that pass on and scale a rotation.',dtx:'The {met} (19 years) and the {sar} (223 months) predict calendars and eclipses.',gtt:'A {tr} changes rotation speed: output = input × input teeth ÷ output teeth.',vtx:'The sky seen from the chosen place: zenith at the centre, horizon at the edge, north up, east left. The background shifts from day to night with the Sun.',ft:'Approximate positions (mean circular orbits): a few degrees of error are possible. For an eclipse, look for a tiny Sun–Moon gap.',g0:'The crank turns the main wheel: one turn = one year. The Sun follows it.',g1:'Lunar stage 1: {a} teeth drive {b} teeth, speed × {r}.',g2:'Lunar stage 2: {a} → {b} teeth, × {r}. Ratios multiply.',g3:'Lunar stage 3: {a} → {b} teeth, × {r}. Total 254/19 ≈ 13.37 turns a year: the Moon.',g4:'{p}: {a} → {b} teeth, i.e. {r} synodic cycles a year.',pn:'Mercury|Venus|Mars|Jupiter|Saturn',vl:'Sun: altitude {a}°, azimuth {z}°. Moon: altitude {b}°.',cd:'N|E|S|W',ha:'Astrolabe',atx:'The {ast} projects the sky onto a plane. The {ret} (ecliptic, stars, Sun, planets) turns over the {tym}, engraved for the place’s latitude: horizon, altitude circles, twilight lines dashed. The red rule reads the time on the limb.',n_ast:'astrolabe',t_ast:'Ancient instrument that shows the celestial vault on a disc and gives the time and position of the stars.',n_ret:'rete',t_ret:'Rotating openwork plate carrying the ecliptic and the stars.',n_tym:'tympan',t_tym:'Fixed disc engraved for one latitude: horizon, altitude circles, meridian.',at2:'Drag the blue rule with the mouse to read the time; the thin lines are azimuths.',he:'Eclipses and alignments',etx:'Eclipses computed for any period (astronomical years, proleptic Gregorian calendar) and tight planet groups. Click a row: the date and the best viewing place are loaded. Approximate positions, less reliable before the year 1500.',et:'Type',es1:'Solar eclipses',es2:'Lunar eclipses',e3:'3 planets close (12°)',e4:'4 planets close (30°)',e5:'5 planets close (80°)',ey:'From year',ed:'Span (years)',eg:'Search',tt:'Total|Annular|Hybrid|Partial|Penumbral',rd:'Rule: {h} (solar time)',no:'No result',pl:'best place:',nb:'{n} results',e3k:'Upcoming (→ 3000)',etx2:'Up to the year 3000, eclipse dates stay reliable, but the longitude of the place becomes uncertain (Earth’s rotation cannot be known in advance) and alignments drift by a few degrees after 2500.',hm:'Path map',mtx:'Click an eclipse in the list: the red line follows the centre line of the Moon’s shadow (totality or annularity) and the gold dot marks the maximum. For a lunar eclipse, the dashed circle bounds the region where the Moon is visible. Continent outlines are schematic.'},es:{h1:'Mecanismo de Anticitera',intro:'El calculador astronómico griego del siglo II a. C., reconstruido para hoy: elige una fecha y un lugar y mira cómo se coloca el cielo.',date:'Fecha',speed:'Velocidad',stars:'Estrellas',play:'Reproducir',pause:'Pausa',now:'Hoy',lang:'Idioma',mode:'Estilo',mn:'Digital',mp:'Pergamino',place:'Lugar',conf:'Configuraciones',save:'Guardar',custom:'Personalizado',hc:'Reloj astronómico',hd:'Esferas traseras',hg2:'Tren de engranajes',hv:'Bóveda celeste',hg:'Engranajes paso a paso',st:'Paso',r:'Fecha|Hora civil|Hora solar verdadera|Salida del Sol|Puesta del Sol|Edad de la Luna|Sol en|Distancia Sol–Luna',ctx:'El Sol marca la hora en el anillo (mediodía arriba), el {z} gira tras él y la Luna muestra su fase en el centro. El arco dorado marca el día. La {eot} separa la hora solar de la del reloj.',n_z:'zodiaco',t_z:'Banda de 12 constelaciones que el Sol recorre en un año.',n_eot:'ecuación del tiempo',t_eot:'Diferencia de hasta ±16 min entre la hora solar verdadera y la media.',n_met:'ciclo de Metón',t_met:'19 años solares ≈ 235 meses lunares: las fases vuelven a las mismas fechas.',n_sar:'Saros',t_sar:'223 meses lunares (≈ 18 años): los eclipses se repiten casi iguales.',n_tr:'tren de engranajes',t_tr:'Serie de ruedas dentadas que transmiten y modifican un giro.',dtx:'El {met} (19 años) y el {sar} (223 meses) predicen calendarios y eclipses.',gtt:'Un {tr} cambia la velocidad: salida = entrada × dientes de entrada ÷ dientes de salida.',vtx:'El cielo visto desde el lugar elegido: cenit en el centro, horizonte en el borde, norte arriba, este a la izquierda. El fondo pasa del día a la noche con el Sol.',ft:'Posiciones aproximadas (órbitas circulares medias): pueden fallar unos grados. En un eclipse, busca una distancia Sol–Luna mínima.',g0:'La manivela gira la rueda principal: una vuelta = un año. El Sol la sigue.',g1:'Etapa lunar 1: {a} dientes mueven {b} dientes, velocidad × {r}.',g2:'Etapa lunar 2: {a} → {b} dientes, × {r}. Las razones se multiplican.',g3:'Etapa lunar 3: {a} → {b} dientes, × {r}. En total 254/19 ≈ 13,37 vueltas al año: la Luna.',g4:'{p}: {a} → {b} dientes, es decir {r} ciclos sinódicos al año.',pn:'Mercurio|Venus|Marte|Júpiter|Saturno',vl:'Sol: altura {a}°, acimut {z}°. Luna: altura {b}°.',cd:'N|E|S|O',ha:'Astrolabio',atx:'El {ast} proyecta el cielo sobre un plano. La {ret} (eclíptica, estrellas, Sol, planetas) gira sobre el {tym}, grabado para la latitud del lugar: horizonte, círculos de altura y crepúsculos punteados. La regla roja lee la hora en el limbo.',n_ast:'astrolabio',t_ast:'Instrumento antiguo que representa la bóveda celeste en un disco y da la hora y la posición de los astros.',n_ret:'red',t_ret:'Placa calada giratoria que lleva la eclíptica y las estrellas.',n_tym:'tímpano',t_tym:'Disco fijo grabado para una latitud: horizonte, círculos de altura, meridiano.',at2:'Arrastra la regla azul con el ratón para leer la hora; las líneas finas son acimutes.',he:'Eclipses y alineaciones',etx:'Eclipses calculados para cualquier período (años astronómicos, calendario gregoriano progresivo) y grupos de planetas cercanos. Pulsa una fila: se cargan la fecha y el mejor lugar de observación. Posiciones aproximadas, menos fiables antes del año 1500.',et:'Tipo',es1:'Eclipses solares',es2:'Eclipses lunares',e3:'3 planetas juntos (12°)',e4:'4 planetas juntos (30°)',e5:'5 planetas juntos (80°)',ey:'Desde el año',ed:'Duración (años)',eg:'Buscar',tt:'Total|Anular|Híbrido|Parcial|Penumbral',rd:'Regla: {h} (hora solar)',no:'Sin resultados',pl:'mejor lugar:',nb:'{n} resultados',e3k:'Próximos (→ 3000)',etx2:'Hasta el año 3000, las fechas de eclipses siguen siendo fiables, pero la longitud del lugar se vuelve incierta (la rotación de la Tierra no se conoce de antemano) y las alineaciones se desvían unos grados después de 2500.',hm:'Mapa del recorrido',mtx:'Pulsa un eclipse de la lista: la línea roja sigue el eje de la sombra de la Luna (totalidad o anularidad) y el punto dorado marca el máximo. En un eclipse lunar, el círculo punteado delimita la región donde la Luna es visible. Los contornos de los continentes son esquemáticos.'}};
+let lg_='fr';
+const T=k=>(L[lg_][k]??L.fr[k]),dc=x=>lg_=='en'?x:x.replace('.',','),fl=(s,o)=>s.replace(/\{(\w+)\}/g,(_,k)=>o[k]),tip=k=>`<span class='tip' tabindex='0' data-tip='${T('t_'+k)}'>${T('n_'+k)}</span>`,fx=s=>s.replace(/\{(\w+)\}/g,(_,k)=>tip(k));
+/* ---------- lieux et configurations ---------- */
+const LOC={lat:49.89,lon:2.3,tz:'Europe/Paris'},PFc={},pf=z=>PFc[z]||(PFc[z]=new Intl.DateTimeFormat('fr-FR',{timeZone:z,hour:'numeric',minute:'numeric',hourCycle:'h23'}));
+const PLACES=[['Amiens',49.89,2.3,'Europe/Paris'],['Paris',48.86,2.35,'Europe/Paris'],['Anticythère',35.87,23.3,'Europe/Athens'],['Athènes',37.98,23.73,'Europe/Athens'],['Alexandrie',31.2,29.92,'Africa/Cairo'],['Reykjavik',64.15,-21.94,'Atlantic/Reykjavik'],['New York',40.71,-74,'America/New_York'],['Quito',-0.18,-78.47,'America/Guayaquil'],['Rio de Janeiro',-22.9,-43.2,'America/Sao_Paulo'],['Le Cap',-33.92,18.42,'Africa/Johannesburg'],['Tokyo',35.68,139.69,'Asia/Tokyo'],['Sydney',-33.87,151.21,'Australia/Sydney']];
+const CONF=[['Halley 1715, Londres',Date.UTC(1715,4,3,8,50),51.5,-.13,'Europe/London'],['Eddington 1919, Príncipe',Date.UTC(1919,4,29,13,30),1.61,7.4,'Africa/Sao_Tome'],['Totale 1999, Reims',Date.UTC(1999,7,11,10,23),49.25,4.03,'Europe/Paris'],['Totale 2017, Nashville',Date.UTC(2017,7,21,18,27),36.16,-86.78,'America/Chicago'],['Totale 2024, Dallas',Date.UTC(2024,3,8,18,40),32.78,-96.8,'America/Chicago']];
+const so=(a,f)=>a.map((x,i)=>`<option value='${i}'>${f(x)}</option>`).join('');
+function lsv(){try{return JSON.parse(localStorage.getItem('ac-saves')||'[]')}catch(e){return[]}}
+function fillConf(){$('#conf').innerHTML=`<option value='-1'>—</option>`+so(CONF.concat(lsv()),x=>x[0])}
+function setLoc(la,lo,z,pi){LOC.lat=la;LOC.lon=lo;LOC.tz=z;$('#lat').value=la;$('#lon').value=lo;$('#place').value=pi}
+$('#place').innerHTML=so(PLACES,x=>x[0])+`<option value='-1' id='pc'></option>`;fillConf();setLoc(49.89,2.3,'Europe/Paris',0);
+$('#place').onchange=e=>{const p=PLACES[+e.target.value];if(p)setLoc(p[1],p[2],p[3],e.target.value)};
+$('#lat').oninput=$('#lon').oninput=()=>{LOC.lat=Math.max(-90,Math.min(90,+$('#lat').value||0));LOC.lon=+$('#lon').value||0;LOC.tz=null;$('#place').value='-1'};
+$('#conf').onchange=e=>{const c=CONF.concat(lsv())[+e.target.value];if(c){t=c[1];setLoc(c[2],c[3],c[4],-1);play=false;pbT()}};
+$('#sv').onclick=()=>{try{const s=lsv();s.push([new Date(t).toISOString().slice(0,16).replace('T',' ')+' ('+LOC.lat.toFixed(1)+', '+LOC.lon.toFixed(1)+')',t,LOC.lat,LOC.lon,LOC.tz]);localStorage.setItem('ac-saves',JSON.stringify(s));fillConf()}catch(e){}};
+$('#mode').onchange=e=>document.documentElement.dataset.m=e.target.value;
+$('#lang').onchange=e=>{lg_=e.target.value;applyLang()};
+/* ---------- voûte céleste ---------- */
+const SKY=$('#sky'),VB=[['sun','\u2609','#ffd46b',7],['moon','\u263d','#e6edff',6],['mer','\u263f','#d8d8e6',3.5],['ven','\u2640','#f2d27a',4],['mar','\u2642','#ff6b57',3.5],['jup','\u2643','#e8a36b',4.5],['sat','\u2644','#cdb88b',4]];
+let sk=`<circle id='sbg' cx='150' cy='150' r='130' fill='#05081c'/><circle cx='150' cy='150' r='87' fill='none' stroke='#ffffff22'/><circle cx='150' cy='150' r='43' fill='none' stroke='#ffffff22'/><circle cx='150' cy='150' r='130' fill='none' stroke='#c89b57' stroke-width='2'/><g id='sst'>`;
+for(const[n,,,z]of ST)sk+=`<g class='vs'><circle r='${z*.7}' fill='#fff3c9'/><text x='3' y='-2' font-size='6.5' fill='#cfd8ff'>${n}</text></g>`;
+sk+='</g>'+VB.map(([id,g,c,r])=>`<g id='v-${id}'><circle r='${r}' fill='${c}'/><text x='${r+2}' y='3' font-size='10' fill='#fff' ${SF}>${g}\uFE0E</text></g>`).join('')+['N','E','S','W'].map((c,i)=>`<text id='c${c}' x='${[150,8,150,292][i]}' y='${[14,154,294,154][i]}' text-anchor='middle' font-size='11' fill='#c89b57'></text>`).join('');
+SKY.innerHTML=sk;
+const VS=[...SKY.querySelectorAll('.vs')],VE=Object.fromEntries(VB.map(v=>[v[0],$('#v-'+v[0])]));
+function aa(l,b,lst){const e=23.4393*rad,L=l*rad,B=b*rad,P=LOC.lat*rad,sd=Math.sin(B)*Math.cos(e)+Math.cos(B)*Math.sin(e)*Math.sin(L),dd=Math.asin(sd),ra=Math.atan2(Math.sin(L)*Math.cos(e)*Math.cos(B)-Math.sin(B)*Math.sin(e),Math.cos(L)*Math.cos(B)),H=lst*rad-ra;
+ return[Math.asin(Math.sin(P)*sd+Math.cos(P)*Math.cos(dd)*Math.cos(H))/rad,mod(Math.atan2(-Math.cos(dd)*Math.sin(H),sd*Math.cos(P)-Math.cos(dd)*Math.sin(P)*Math.cos(H))/rad,360)]}
+function pl(el,al,az){const r=(90-al)/90*130;el.setAttribute('transform',`translate(${150-r*Math.sin(az*rad)} ${150-r*Math.cos(az*rad)})`);el.style.display=al<0?'none':''}
+function sky(d,ls,lm){
+ const lst=mod(280.46061837+360.98564736629*d+LOC.lon,360),P={sun:[ls,0],moon:[lm,5.145*Math.sin((lm-(125.04-.0529539*d))*rad)]};
+ for(const k of['mer','ven','mar','jup','sat'])P[k]=[geo(k,d),0];
+ let sa=0,saz=0,ma=0;
+ for(const id in VE){const[al,az]=aa(P[id][0],P[id][1],lst);if(id=='sun'){sa=al;saz=az}if(id=='moon')ma=al;pl(VE[id],al,az)}
+ VS.forEach((e,i)=>{const[al,az]=aa(ST[i][1],ST[i][2],lst);pl(e,al,az)});
+ $('#sbg').setAttribute('fill',sa>0?'#2a5fb0':sa>-6?'#3a3066':sa>-12?'#161a46':'#05081c');$('#sst').style.opacity=sa>0?.08:sa>-6?.45:1;
+ $('#vl').textContent=fl(T('vl'),{a:sa.toFixed(0),z:saz.toFixed(0),b:ma.toFixed(0)})}
+/* ---------- engrenages pas à pas ---------- */
+const GS=[[60,60],[64,38],[48,24],[127,32],[145,46],[40,64],[37,79],[65,71],[57,59]],rmo=matchMedia('(prefers-reduced-motion: reduce)').matches;let gi=0,ga=60,gb=60;
+function gstep(i){gi=(i+GS.length)%GS.length;const[a,b]=GS[gi],k=Math.min(185/(a+b),92/Math.max(a,b)),r1=a*k,r2=b*k,x1=(420-2.08*(r1+r2))/2+1.08*r1,x2=x1+r1+r2;ga=a;gb=b;
+ $('#gsv').innerHTML=`<g transform='translate(${x1} 110)'><g id='gA'><path d='${gear(a,r1)}' fill='#c89b57' fill-rule='evenodd' stroke='#7a5a2b'/></g><text text-anchor='middle' y='5' font-size='14' font-weight='700' fill='#0b1030'>${a}</text></g><g transform='translate(${x2} 110)'><g id='gB'><path d='${gear(b,r2)}' fill='#9aa8c7' fill-rule='evenodd' stroke='#4a5578'/></g><text text-anchor='middle' y='5' font-size='14' font-weight='700' fill='#0b1030'>${b}</text></g>`;
+ $('#gtx').textContent=fl(T(gi<4?'g'+gi:'g4'),{a,b,r:dc((a/b).toFixed(3)),p:T('pn').split('|')[gi-4]});$('#gst').textContent=T('st')+' '+(gi+1)+'/'+GS.length}
+function gturn(n){const a=$('#gA'),b=$('#gB');if(!a||!b)return;const w=rmo?0:n/1000*30;a.setAttribute('transform',`rotate(${w})`);b.setAttribute('transform',`rotate(${-w*ga/gb+(gb%2?0:180/gb)})`)}
+$('#gp').onclick=()=>gstep(gi-1);$('#gn').onclick=()=>gstep(gi+1);
+/* ---------- astrolabe ---------- */
+const AST=$('#ast'),SC=85.1,EPS=23.4393,sgn=()=>LOC.lat<0?-1:1;let AK='';
+const pj=(dec,H,s)=>{const r=Math.tan((90-s*dec)*rad/2)*SC,t=s*H*rad;return[+(180+r*Math.sin(t)).toFixed(1),+(180-r*Math.cos(t)).toFixed(1)]};
+const pl2=p=>'M'+p.map(q=>q[0]+' '+q[1]).join('L');
+function eq(l,b){const e=EPS*rad,L=l*rad,B=b*rad;return[mod(Math.atan2(Math.sin(L)*Math.cos(e)*Math.cos(B)-Math.sin(B)*Math.sin(e),Math.cos(L)*Math.cos(B))/rad,360),Math.asin(Math.sin(B)*Math.cos(e)+Math.cos(B)*Math.sin(e)*Math.sin(L))/rad]}
+function alt(h,s){const P=LOC.lat*rad,q=h*rad,pts=[];for(let a=0;a<=360;a+=5){const z=a*rad,sd=Math.sin(P)*Math.sin(q)+Math.cos(P)*Math.cos(q)*Math.cos(z),H=Math.atan2(-Math.sin(z)*Math.cos(q),Math.sin(q)*Math.cos(P)-Math.cos(q)*Math.sin(P)*Math.cos(z))/rad;pts.push(pj(Math.asin(sd)/rad,H,s))}return pl2(pts)}
+let AB='';for(const[id,g,c,r]of VB)AB+=`<g id='ab-${id}'><circle r='${r*.8+1}' fill='${c}'/><text x='${r*.8+3}' y='3' font-size='9' fill='#fff' ${SF}>${g}\uFE0E</text></g>`;
+AST.innerHTML=`<defs><clipPath id='acl'><circle cx='180' cy='180' r='130'/></clipPath></defs><circle cx='180' cy='180' r='172' fill='url(#bz)'/><circle cx='180' cy='180' r='166' fill='#10173a'/><circle cx='180' cy='180' r='148' fill='none' stroke='#1b2552' stroke-width='36'/><circle cx='180' cy='180' r='130' fill='#0a0f2b' stroke='#c89b57'/><g clip-path='url(#acl)'><g id='tym'></g><g id='rg'><g id='rst'></g><g id='rb'>${AB}</g></g></g><g id='lm'></g><line id='rule' x1='180' y1='180' x2='180' y2='12' stroke='#ff6b57' stroke-width='2' stroke-linecap='round'/><line id='rl' x1='180' y1='180' x2='180' y2='10' stroke='#6fe0ff' stroke-width='2.5' stroke-dasharray='6 3' stroke-linecap='round'/><circle cx='180' cy='180' r='5' fill='url(#bz)'/>`;
+const ABE=Object.fromEntries(VB.map(v=>[v[0],$('#ab-'+v[0])]));
+function buildAst(s){
+ let tt=[EPS,0,-EPS].map(x=>`<circle cx='180' cy='180' r='${(Math.tan((90-s*x)*rad/2)*SC).toFixed(1)}' fill='none' stroke='#c89b57' stroke-opacity='.6'/>`).join('');
+ for(const h of[15,30,45,60,75])tt+=`<path d='${alt(h,s)}' fill='none' stroke='#6f8cff' stroke-opacity='.5'/>`;
+ for(const h of[-6,-12,-18])tt+=`<path d='${alt(h,s)}' fill='none' stroke='#6f8cff' stroke-opacity='.35' stroke-dasharray='3 3'/>`;
+ for(let a=0;a<360;a+=30)tt+=`<path d='${azl(a,s)}' fill='none' stroke='#6f8cff' stroke-opacity='.25'/>`;
+ const[zx,zy]=pj(LOC.lat,0,s);
+ tt+=`<path d='${alt(0,s)}' fill='none' stroke='#ffd46b' stroke-width='1.8'/><line x1='180' y1='50' x2='180' y2='310' stroke='#c89b57' stroke-opacity='.4'/><circle cx='${zx}' cy='${zy}' r='2.5' fill='#ff6b57'/>`;
+ $('#tym').innerHTML=tt;
+ const e=[];for(let l=0;l<=360;l+=3){const[ra,dc]=eq(l,0);e.push(pj(dc,-ra,s))}
+ let rr=`<path d='${pl2(e)}' fill='none' stroke='#e6edff' stroke-width='1.6'/>`;
+ for(let i=0;i<12;i++){const[a1,b1]=eq(i*30,0),[x1,y1]=pj(b1,-a1,s),[a2,b2]=eq(i*30,6),[x2,y2]=pj(b2,-a2,s),[a3,b3]=eq(i*30+15,8),[x3,y3]=pj(b3,-a3,s);rr+=`<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' stroke='#e6edff'/><text x='${x3}' y='${y3+4}' text-anchor='middle' font-size='11' fill='#c89b57' ${SF}>${SG[i]}</text>`}
+ for(const[n,l,b,z]of ST){const[a,dc]=eq(l,b),[x,y]=pj(dc,-a,s);rr+=`<circle cx='${x}' cy='${y}' r='${z*.8}' fill='#fff3c9'/><text x='${x+3}' y='${y-2}' font-size='5.5' fill='#cfd8ff'>${n}</text>`}
+ $('#rst').innerHTML=rr;
+ let lb='';for(let h=0;h<24;h++){const a=`rotate(${(h-12)*15*s} 180 180)`;lb+=`<line x1='180' y1='14' x2='180' y2='${h%6?20:26}' stroke='#c89b57' transform='${a}'/><text x='180' y='36' text-anchor='middle' font-size='11' fill='#e6edff' font-family='Oxanium,sans-serif' transform='${a}'>${RM[(h+11)%12]}</text>`}
+ $('#lm').innerHTML=lb}
+function astro(d,ls,lm){
+ const s=sgn(),lst=mod(280.46061837+360.98564736629*d+LOC.lon,360),key=s+'|'+LOC.lat;
+ if(key!==AK){AK=key;buildAst(s)}
+ $('#rg').setAttribute('transform',`rotate(${s*lst} 180 180)`);
+ const P={sun:[ls,0],moon:[lm,5.145*Math.sin((lm-(125.04-.0529539*d))*rad)]};
+ for(const k of['mer','ven','mar','jup','sat'])P[k]=[geo(k,d),0];
+ for(const id in P){const[ra,dec]=eq(P[id][0],P[id][1]),[x,y]=pj(dec,-ra,s);ABE[id].setAttribute('transform',`translate(${x} ${y})`)}
+ $('#rule').setAttribute('transform',`rotate(${s*(lst-eq(ls,0)[0])} 180 180)`);$('#rl').setAttribute('transform',`rotate(${RA2} 180 180)`);$('#rdo').textContent=fl(T('rd'),{h:hh(12+s*RA2/15)})}
+/* ---------- règle, éclipses, alignements ---------- */
+let RA2=60,drg=false;
+const mv=e=>{const b=AST.getBoundingClientRect();RA2=Math.atan2(e.clientX-b.left-b.width/2,-(e.clientY-b.top-b.height/2))/rad};
+AST.addEventListener('pointerdown',e=>{drg=true;try{AST.setPointerCapture(e.pointerId)}catch(x){}mv(e)});
+AST.addEventListener('pointermove',e=>{if(drg)mv(e)});
+AST.addEventListener('pointerup',()=>drg=false);
+function azl(a,s){const P=LOC.lat*rad,z=a*rad,pts=[];for(let h=0;h<=90;h+=6){const q=h*rad,sd=Math.sin(P)*Math.sin(q)+Math.cos(P)*Math.cos(q)*Math.cos(z),H=Math.atan2(-Math.sin(z)*Math.cos(q),Math.sin(q)*Math.cos(P)-Math.cos(q)*Math.sin(P)*Math.cos(z))/rad;pts.push(pj(Math.asin(sd)/rad,H,s))}return pl2(pts)}
+const norm=x=>{x=mod(x,360);return x>180?x-360:x},jd2ms=j=>(j-2440587.5)*864e5,dT=y=>-20+32*((y-1820)/100)**2;
+const sunL=d=>{const g=(357.528+.9856003*d)*rad;return mod(280.46+.9856474*d+1.915*Math.sin(g)+.02*Math.sin(2*g),360)},moonL=d=>mod(218.316+13.176396*d+6.289*Math.sin((134.963+13.064993*d)*rad),360);
+const fd=ms=>{const d=new Date(ms),y=d.getUTCFullYear();return(y<0?'−'+-y:y)+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0')};
+function lunation(k,full){
+ const T2=k/1236.85,s=Math.sin,c=Math.cos,E=1-.002516*T2-.0000074*T2*T2,
+ J=2451550.09766+29.530588861*k+.00015437*T2*T2-.00000015*T2**3+.00000000073*T2**4,
+ M=(2.5534+29.1053567*k-.0000014*T2*T2-.00000011*T2**3)*rad,
+ Mp=(201.5643+385.81693528*k+.0107582*T2*T2+.00001238*T2**3-.000000058*T2**4)*rad,
+ F=(160.7108+390.67050284*k-.0016118*T2*T2-.00000227*T2**3+.000000011*T2**4)*rad,
+ Om=(124.7746-1.56375588*k+.0020672*T2*T2+.00000215*T2**3)*rad,
+ F1=F-.02665*s(Om)*rad,A1=(299.77+.107408*k-.009173*T2*T2)*rad;
+ if(Math.abs(s(F))>.36)return null;
+ const dj=(full?-.4065:-.4075)*s(Mp)+(full?.1727:.1721)*E*s(M)+.0161*s(2*Mp)-.0097*s(2*F1)+.0073*E*s(Mp-M)-.005*E*s(Mp+M)-.0023*s(Mp-2*F1)+.0021*E*s(2*M)+.0012*s(Mp+2*F1)+.0006*E*s(2*Mp+M)-.0004*s(3*Mp)-.0003*E*s(M+2*F1)+.0003*s(A1)-.0002*E*s(M-2*F1)-.0002*E*s(2*Mp-M)-.0002*s(Om),
+ P=.207*E*s(M)+.0024*E*s(2*M)-.0392*s(Mp)+.0116*s(2*Mp)-.0073*E*s(Mp+M)+.0067*E*s(Mp-M)+.0118*s(2*F1),
+ Q=5.2207-.0048*E*c(M)+.002*E*c(2*M)-.3299*c(Mp)-.006*E*c(Mp+M)+.0041*E*c(Mp-M),
+ g=(P*c(F1)+Q*s(F1))*(1-.0048*Math.abs(c(F1))),ag=Math.abs(g),
+ u=.0059+.0046*E*c(M)-.0182*c(Mp)+.0004*c(2*Mp)-.0005*c(M+Mp);
+ let type;
+ if(!full){if(ag>1.5433+u)return null;type=ag<.9972?(u<0?'T':u>.0047?'A':'H'):'P'}
+ else{const pen=(1.5573+u-ag)/.545,um=(1.0128-u-ag)/.545;if(pen<=0)return null;type=um>=1?'T':um>0?'P':'N'}
+ return{j:J+dj,g,type}}
+function findEcl(y0,y1,solar){const o=[];for(let k=Math.floor((y0-2000)*12.3685);k<=(y1-2000)*12.3685;k++){const e=lunation(solar?k:k+.5,!solar);if(e)o.push(e)}return o}
+function eplace(e,solar){
+ const y=2000+(e.j-2451545)/365.25,ms=jd2ms(e.j)-dT(y)*1000,d=(ms-Date.UTC(2000,0,1,12))/864e5,gm=mod(280.46061837+360.98564736629*d,360);
+ if(solar){const q=Math.abs(e.g)<.995?shadow(e.j,e.g,0,0,1)[0]:null;if(q)return{ms,lat:q[0],lon:q[1]};const g=Math.max(-.999,Math.min(.999,e.g)),[ra,dec]=eq(sunL(d),0),dr=dec*rad;return{ms,lat:Math.asin(g*Math.cos(dr)+Math.sqrt(1-g*g)*Math.sin(dr))/rad,lon:norm(ra-gm)}}
+ const lm=moonL(d),[ra,dec]=eq(lm,5.145*Math.sin((lm-(125.04-.0529539*d))*rad));return{ms,lat:dec,lon:norm(ra-gm)}}
+const PK=['mer','ven','mar','jup','sat'];
+function algn(y0,y1,k,thr){const o=[];let run=null;
+ for(let d=(y0-2000)*365.2425;d<(y1-2000)*365.2425;d++){const a=PK.map(p=>[geo(p,d),p]).sort((x,y)=>x[0]-y[0]);let best=360,bi=0;
+  for(let i=0;i<5;i++){const sp=mod(a[(i+k-1)%5][0]-a[i][0],360);if(sp<best){best=sp;bi=i}}
+  if(best<thr){if(!run||best<run.sp)run={d,sp:best,nm:Array.from({length:k},(_,j)=>a[(bi+j)%5][1])}}else if(run){o.push(run);run=null}}
+ if(run)o.push(run);return o}
+function bestPlace(d0,names){const sv=LOC.lat;let bp=null,bs=-1,bd=d0;
+ PLACES.forEach((p,i)=>{LOC.lat=p[1];for(let h=0;h<48;h++){const d=d0+h/48,lst=mod(280.46061837+360.98564736629*d+p[2],360);if(aa(sunL(d),0,lst)[0]>-6)continue;let sc=0;for(const n of names)sc+=Math.max(0,aa(geo(n,d),0,lst)[0]);sc/=names.length;if(sc>bs){bs=sc;bp=i;bd=d}}});
+ LOC.lat=sv;return bp===null?null:[bp,bd]}
+function esearch(){
+ const ty=$('#etype').value,y0=+$('#eyear').value||1900,fut=$('#espan').value=='0',y1=fut?3000:y0+(+$('#espan').value),now=Date.now(),cd=T('cd').split('|'),tt=T('tt').split('|'),ix={T:0,A:1,H:2,P:3,N:4},pn=T('pn').split('|'),o=[];
+ const co=(la,lo)=>Math.abs(la).toFixed(1)+'°'+(la<0?cd[2]:cd[0])+' '+Math.abs(lo).toFixed(1)+'°'+(lo<0?cd[3]:cd[1]);
+ if(ty=='s'||ty=='l'){const so=ty=='s';for(const e of findEcl(y0,y1,so)){const p=eplace(e,so);if(fut&&p.ms<now)continue;o.push(`<li><button data-t='${p.ms}' data-la='${p.lat}' data-lo='${p.lon}' data-j='${e.j}' data-g='${e.g}' data-so='${so?1:0}'>${fd(p.ms)}  ${tt[ix[e.type]]}  ${co(p.lat,p.lon)}</button></li>`)}}
+ else{const k=+ty;for(const r of algn(y0,y1,k,{3:12,4:30,5:80}[k])){const ms=Date.UTC(2000,0,1,12)+r.d*864e5;if(fut&&ms<now)continue;const b=bestPlace(r.d,r.nm),nm=r.nm.map(n=>pn[PK.indexOf(n)]).join(', '),p=b&&PLACES[b[0]];
+  o.push(`<li><button data-t='${b?Date.UTC(2000,0,1,12)+b[1]*864e5:ms}'${b?` data-la='${p[1]}' data-lo='${p[2]}' data-pi='${b[0]}'`:''}>${fd(ms)}  ${nm}  ${r.sp.toFixed(0)}°${b?'  '+T('pl')+' '+p[0]:''}</button></li>`)}}
+ $('#elist').innerHTML=(o.length?`<li style='color:var(--mute)'>${fl(T('nb'),{n:o.length})}</li>`:'')+o.join('')||`<li>${T('no')}</li>`;const f1=$('#elist').querySelector('button[data-j]');if(f1)drawEcl(+f1.dataset.j,+f1.dataset.g,f1.dataset.so=='1')}
+$('#eg').onclick=esearch;$('#e3k').onclick=()=>{$('#eyear').value=new Date().getFullYear();$('#espan').value='0';esearch()};
+$('#elist').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;t=+d.t;if(d.la===undefined){}else if(d.pi!==undefined)setLoc(+d.la,+d.lo,PLACES[+d.pi][3],d.pi);else setLoc(+d.la,+d.lo,null,-1);if(d.j)drawEcl(+d.j,+d.g,d.so=='1');play=false;pbT()};
+/* ---------- carte du monde ---------- */
+const mx=o=>(o+180)*2,my=a=>(90-a)*2;
+const LAND=['-168,66 -157,71 -141,70 -125,70 -110,68 -95,68 -85,66 -80,63 -94,60 -93,57 -82,55 -79,52 -78,58 -70,60 -65,60 -61,56 -56,52 -66,45 -70,43 -76,38 -76,35 -81,31 -80,26 -82,25 -84,30 -90,30 -97,27 -97,22 -95,19 -91,18 -87,21 -88,16 -83,15 -83,10 -77,8 -80,7 -85,10 -92,14 -97,16 -105,20 -106,23 -112,29 -110,23 -117,32 -121,35 -124,40 -124,47 -128,51 -135,57 -140,60 -150,60 -158,57 -165,55 -160,59 -165,62','-77,8 -72,12 -62,10 -52,5 -50,0 -44,-2 -35,-5 -39,-13 -41,-22 -48,-26 -53,-34 -58,-38 -62,-41 -65,-47 -68,-52 -70,-55 -74,-51 -73,-40 -71,-30 -70,-18 -76,-14 -81,-5 -80,0','-17,21 -10,30 -6,35 10,37 20,33 32,31 34,28 43,12 51,12 40,-3 40,-15 35,-25 32,-29 27,-34 20,-35 15,-27 12,-17 13,-8 9,-1 9,4 3,6 -8,4 -13,8 -17,14','-9,37 -9,43 -2,43.5 -4,48 2,51 8,54 9,57 14,55 18,59 22,66 28,70 40,67 44,68 60,69 70,73 100,77 130,72 160,69 170,70 180,66 180,64 162,58 155,50 142,52 135,43 130,42 126,37 122,40 118,39 122,30 120,24 110,21 106,17 109,12 105,9 100,13 100,6 103,1 98,8 98,16 92,22 88,22 80,15 78,8 73,16 68,23 57,25 56,26 50,30 48,29 52,24 56,24 59,22 52,16 43,13 39,21 34,28 35,33 36,36 30,36 27,37 26,40 23,38 22,37 20,40 19,42 13,45 12,44 16,40 16,38 12,42 9,44 3,43 0,39 -5,36','114,-22 122,-18 130,-12 137,-12 142,-11 146,-19 153,-26 151,-34 146,-39 140,-38 135,-34 130,-32 115,-34','-73,78 -60,82 -30,83 -20,80 -20,70 -43,60 -50,64 -55,70','-180,-70 -100,-72 -60,-65 -20,-70 40,-68 100,-66 150,-68 180,-70 180,-90 -180,-90','-5,50 1,51 2,53 -2,57 -6,58 -5,55 -3,54','130,31 135,34 140,36 142,41 141,45 139,40 136,36 131,34','44,-25 47,-25 50,-15 49,-12 44,-17','172,-34 178,-38 174,-41 172,-46 167,-46 172,-41','95,5 98,4 106,-3 104,-6 98,0','109,2 117,7 119,1 116,-4 110,-3','-24,65 -14,66 -14,64 -22,63'];
+let mk=`<rect width='720' height='360' fill='#0a0f2b'/>`;
+for(let o=-150;o<=150;o+=30)mk+=`<line x1='${mx(o)}' y1='0' x2='${mx(o)}' y2='360' stroke='#2a3566' stroke-width='.7'/>`;
+for(let a=-60;a<=60;a+=30)mk+=`<line x1='0' y1='${my(a)}' x2='720' y2='${my(a)}' stroke='${a?'#2a3566':'#4a5a99'}' stroke-width='.7'/>`;
+mk+=LAND.map(s=>`<polygon points='${s.split(' ').map(p=>{const[o,a]=p.split(',');return mx(+o)+','+my(+a)}).join(' ')}' fill='#1b2552' stroke='#c89b57' stroke-width='.8'/>`).join('')+`<g id='mp'></g>`;
+$('#map').innerHTML=mk;
+function shadow(j,g,m0,m1,st){
+ const d0=j-2451545,dts=dT(2000+d0/365.25),e=EPS*rad,Ds=23455,Dm=(385001-20905*Math.cos((134.963+13.064993*d0)*rad))/6378.14,
+ rel=(norm(moonL(d0+.01)-moonL(d0-.01))-norm(sunL(d0+.01)-sunL(d0-.01)))/.02,
+ bp=5.145*Math.cos((moonL(d0)-(125.04-.0529539*d0))*rad)*13.2293*rad,b0=Math.asin(g/Dm)/rad,pts=[];
+ for(let m=m0;m<=m1;m+=st){const dt=m/1440,ls=sunL(d0+dt)*rad,lm=(sunL(d0+dt)+rel*dt)*rad,bm=(b0+bp*dt)*rad,
+  S=[Ds*Math.cos(ls),Ds*Math.sin(ls),0],M=[Dm*Math.cos(bm)*Math.cos(lm),Dm*Math.cos(bm)*Math.sin(lm),Dm*Math.sin(bm)];
+  let v=[M[0]-S[0],M[1]-S[1],M[2]-S[2]];const n=Math.hypot(v[0],v[1],v[2]);v=v.map(x=>x/n);
+  const b=M[0]*v[0]+M[1]*v[1]+M[2]*v[2],disc=b*b-(M[0]*M[0]+M[1]*M[1]+M[2]*M[2]-1);if(disc<0)continue;
+  const u=-b-Math.sqrt(disc),Q=[M[0]+u*v[0],M[1]+u*v[1],M[2]+u*v[2]],ye=Q[1]*Math.cos(e)-Q[2]*Math.sin(e),ze=Q[1]*Math.sin(e)+Q[2]*Math.cos(e),
+  gm=mod(280.46061837+360.98564736629*(d0+dt-dts/86400),360);
+  pts.push([Math.asin(ze)/rad,norm(Math.atan2(ye,Q[0])/rad-gm),m])}
+ return pts}
+function seg(pts,col,w,dash){let d='',pr=null;for(const[a,o]of pts){d+=(pr===null||Math.abs(o-pr)>180?'M':'L')+mx(o).toFixed(1)+' '+my(a).toFixed(1);pr=o}return `<path d='${d}' fill='none' stroke='${col}' stroke-width='${w}' stroke-linecap='round'${dash?` stroke-dasharray='${dash}'`:''}/>`}
+function drawEcl(j,g,so){
+ if(!isFinite(j))return;
+ const ms=jd2ms(j)-dT(2000+(j-2451545)/365.25)*1000,p=eplace({j,g},so);let h='';
+ if(so){if(Math.abs(g)<.9972)h+=seg(shadow(j,g,-240,240,4),'#ff6b57',2.5)}
+ else{const la=p.lat*rad,pts=[];for(let b=0;b<=360;b+=5){const t=b*rad,L=Math.asin(Math.cos(la)*Math.cos(t)),dl=Math.atan2(Math.sin(t)*Math.cos(la),-Math.sin(la)*Math.sin(L));pts.push([L/rad,norm(p.lon+dl/rad)])}h+=seg(pts,'#ffd46b',1.8,'5 3')}
+ h+=`<circle cx='${mx(p.lon)}' cy='${my(p.lat)}' r='4.5' fill='#ffd46b' stroke='#0b1030'/><text x='8' y='18' font-size='14' fill='#e6edff' font-family='Oxanium,sans-serif'>${fd(ms)}</text>`;
+ $('#mp').innerHTML=h}
+function applyLang(){
+ document.documentElement.lang=lg_;
+ $('#h1').textContent=T('h1');$('#intro').textContent=T('intro');
+ document.querySelectorAll('[data-i]').forEach(e=>e.textContent=T(e.dataset.i));
+ $('#now').textContent=T('now');pbT();$('#pc').textContent=T('custom');
+ $('#ctx').innerHTML=fx(T('ctx'));$('#dtx').innerHTML=fx(T('dtx'));$('#gtt').innerHTML=fx(T('gtt'));$('#vtx').textContent=T('vtx');$('#atx').innerHTML=fx(T('atx'))+' '+T('at2');$('#etx').textContent=T('etx')+' '+T('etx2');$('#mtx').textContent=T('mtx');$('#ft').textContent=T('ft');
+ const rr=T('r').split('|');document.querySelectorAll('#ck dt').forEach((e,i)=>e.textContent=rr[i]);
+ T('cd').split('|').forEach((c,i)=>$('#c'+'NESW'[i]).textContent=c);
+ gstep(gi);esearch()}
+function loop(n){if(play)t+=spd*864e5*(n-last)/1000;last=n;draw();gturn(n);requestAnimationFrame(loop)}
+const pb=$('#play'),pbT=()=>pb.textContent=T(play?'pause':'play');pbT();applyLang();
+pb.onclick=()=>{play=!play;pbT()};
+$('#spd').onchange=e=>spd=+e.target.value;
+$('#st').onchange=e=>$('#stars').style.display=e.target.checked?'':'none';
+$('#now').onclick=()=>{t=Date.now()};
+$('#date').oninput=e=>{const v=new Date(e.target.value+'T12:00:00Z');if(!isNaN(v)){t=+v;play=false;pbT()}};
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
